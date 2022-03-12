@@ -8,9 +8,7 @@ import bs4
 
 def check_downloaded_word(word, directory="./"):
     """Check if word is already in directory in any format.
-    Returns oggpath
-    Return 1 if you have trouble searching.
-    Return 2 if you can't download wiktionary page or ogg file."""
+    Returns True or False"""
     soundfiles = os.listdir(directory)
     #strip extension
     downloaded_words = [os.path.splitext(x)[0] for x in soundfiles]
@@ -21,6 +19,10 @@ def check_downloaded_word(word, directory="./"):
 
 def get_wiki(word, directory="./"):
     """Check if word is in directory and download word.ogg into directory"""
+    """Return oggpath if it downloads successfully.
+    Return 0 if it is already downloaded
+    Return 1 if you have trouble searching.
+    Return 2 if you can't download wiktionary page or ogg file."""
     if check_downloaded_word(word, directory):
         print(word + " already downloaded")
         return 0
@@ -71,6 +73,7 @@ def get_wiki(word, directory="./"):
 #convert ogg to mp3
 
 def convert_ogg_to_mp3(oggfile, remove_ogg = False):
+    """Return mp3path after converting with ffmpeg"""
     oggpath = os.path.abspath(oggfile)
     ogg_dir = os.path.dirname(oggfile)
     oggfile = os.path.basename(oggfile)
@@ -86,10 +89,11 @@ def convert_ogg_to_mp3(oggfile, remove_ogg = False):
     
 
 if __name__ == "__main__":
-    wordlist = ["musician"]
+    wordlist = ["school", "musician"]
     print(len(wordlist))
     missing_words = []
     for word in wordlist:
-        get_wiki(word)
+        if get_wiki(word) in [1,2]:
+            missing_words.append(word)
         convert_ogg_to_mp3(word + ".ogg", True)
     print("Missing Words: {}".format(missing_words))
