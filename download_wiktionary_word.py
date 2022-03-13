@@ -38,6 +38,9 @@ def get_wiki(word, directory="./"):
         return 1
     print("Processing response")
     index = bs4.BeautifulSoup(response,"html5lib")
+    #search for links to ogg files
+    links = [link.get("href") for link in index.find_all("a") if link.get("href") != None and ".ogg" in link.get("href")]
+    print("Found: ", " ".join(links))
     filenameguess = "File:en-us-" + word + ".ogg"
     #Jump to file wiktionary page
     query = base + filenameguess
