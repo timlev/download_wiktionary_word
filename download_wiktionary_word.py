@@ -18,8 +18,10 @@ def check_downloaded_word(word, directory="./"):
         return False
 
 def choose(ogg_files):
+    if len(ogg_files) == 0:
+        return ""
     choice = ""
-    while choice not in [str(x) for x in range(len(ogg_files))]:
+    while choice not in [str(x) for x in range(len(ogg_files))] and choice != None:
         print('Choices:')
         for i, c in enumerate(ogg_files):
             print(str(i), ":",c)
@@ -50,8 +52,12 @@ def get_wiki(word, directory="./"):
     #search for links to ogg files
     links = [link.get("href") for link in index.find_all("a") if link.get("href") != None and ".ogg" in link.get("href")]
     print("Found: ", " ".join(links))
-    if "wiki/File:en-us-" + word + ".ogg" in links:
-        filenameguess = "File:en-us-" + word + ".ogg"
+    us_links = [x for x in links if "n-us-" + word + ".ogg" in x]
+
+    if len(us_links) > 0:
+        #filenameguess = "File:en-us-" + word + ".ogg"
+        #filenameguess = "File:en-us-" + word + ".ogg"
+        filenameguess = us_links[0].replace("/wiki/","")
     else:
         filenameguess = choose(links)
     #Jump to file wiktionary page
@@ -107,7 +113,17 @@ def convert_ogg_to_mp3(oggfile, remove_ogg = False):
 if __name__ == "__main__":
 
     """Example usage of get_wiki() and convert_ogg_to_mp3"""
-    wordlist = ["school", "musician"]
+    #wordlist = ["school", "musician"]
+    wordlist = ['yaup',
+ 'yawp',
+ 'yearn',
+ 'yield_up',
+ 'zero_in',
+ 'zip_by',
+ 'zip_up',
+ 'zonk_out',
+ 'zoom_along']
+
     print(len(wordlist))
     missing_words = []
     for word in wordlist:
