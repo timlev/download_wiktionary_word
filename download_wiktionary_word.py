@@ -89,6 +89,8 @@ def convert_ogg_to_mp3(oggfile, remove_ogg = False):
     
 
 if __name__ == "__main__":
+
+    """Example usage of get_wiki() and convert_ogg_to_mp3"""
     wordlist = ["school", "musician"]
     print(len(wordlist))
     missing_words = []
