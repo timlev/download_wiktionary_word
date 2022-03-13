@@ -17,6 +17,15 @@ def check_downloaded_word(word, directory="./"):
     else:
         return False
 
+def choose(ogg_files):
+    choice = ""
+    while choice not in [str(x) for x in range(len(ogg_files))]:
+        print('Choices:')
+        for i, c in enumerate(ogg_files):
+            print(str(i), ":",c)
+        choice = input("Which do you want?\n")
+    return ogg_files[int(choice)].replace("/wiki/","")
+
 def get_wiki(word, directory="./"):
     """Check if word is in directory and download word.ogg into directory"""
     """Return oggpath if it downloads successfully.
@@ -41,7 +50,10 @@ def get_wiki(word, directory="./"):
     #search for links to ogg files
     links = [link.get("href") for link in index.find_all("a") if link.get("href") != None and ".ogg" in link.get("href")]
     print("Found: ", " ".join(links))
-    filenameguess = "File:en-us-" + word + ".ogg"
+    if "wiki/File:en-us-" + word + ".ogg" in links:
+        filenameguess = "File:en-us-" + word + ".ogg"
+    else:
+        filenameguess = choose(links)
     #Jump to file wiktionary page
     query = base + filenameguess
     try:
@@ -55,9 +67,10 @@ def get_wiki(word, directory="./"):
     oggsource = ""
     for link in links:
         href = str(link.get("href"))
-        if "upload" in href and "n-us" in href and ".ogg" in href and word in href:
+        #if "upload" in href and "n-us" in href and ".ogg" in href and word in href:
+        if "upload" in href:
             oggsource = "https:" + href
-
+            print(oggsource)
     print("Downloading to: " + os.path.join(directory, word + ".ogg"))
     try:
         print("Getting ogg...")
